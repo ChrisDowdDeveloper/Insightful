@@ -2,13 +2,15 @@
 import { useState } from "react";
 import HeaderComponent from "../components/HeaderComponent";
 import SidebarComponent from "../components/SidebarComponent";
+import UploadFileComponent from "../components/UploadFileComponent";
 
 export default function Dashboard() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
 
   return (
     <div className="flex h-screen bg-white">
-      <SidebarComponent setIsOpen={setIsOpen} isOpen={isOpen} />
+      <SidebarComponent setIsOpen={setIsOpen} isOpen={isOpen} setShowUpload={setShowUpload} />
 
       <div className="flex-1 flex flex-col border">
         <HeaderComponent setIsOpen={setIsOpen}/>
@@ -32,6 +34,7 @@ export default function Dashboard() {
             </div>
           </div>
         </main>
+        <UploadFileComponent showUpload={showUpload} setShowUpload={setShowUpload}/>
       </div>
     </div>
   );

@@ -5,9 +5,10 @@ import React from 'react'
 interface SidebarComponentProps {
     setIsOpen: (value: boolean) => void;
     isOpen: boolean;
+    setShowUpload: (value: boolean) => void;
 }
 
-const SidebarComponent: React.FC<SidebarComponentProps> = ({ setIsOpen, isOpen }) => {
+const SidebarComponent: React.FC<SidebarComponentProps> = ({ setIsOpen, isOpen, setShowUpload }) => {
   return (
     <aside
         className={`${
@@ -50,7 +51,9 @@ const SidebarComponent: React.FC<SidebarComponentProps> = ({ setIsOpen, isOpen }
             </ul>
             <h2 className="text-gray-500 text-xs font-bold mt-10">Actions</h2>
             <div>
-                <button className="w-full bg-customBlue text-white py-2 rounded-xl flex items-center justify-center space-x-4 mb-20">
+                <button 
+                onClick={() => setShowUpload(true)}
+                className="w-full bg-customBlue text-white py-2 rounded-xl flex items-center justify-center space-x-4 mb-20">
                     <FontAwesomeIcon icon={faUpload} className="w-5 h-5" />
                     <span>Upload File</span>
                 </button>
