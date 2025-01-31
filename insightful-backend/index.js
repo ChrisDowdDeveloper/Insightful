@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const uploadRoutes = require("./src/routes/upload.router");
+const authRoutes = require("./src/routes/auth.router");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 // Register Routes
+app.use("/api/auth", authRoutes)
 app.use("/api/upload", uploadRoutes);
 
 // Global Error Handling Middleware (Optional)

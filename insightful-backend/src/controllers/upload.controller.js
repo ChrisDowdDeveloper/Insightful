@@ -1,5 +1,5 @@
-const { uploadFile } = require("../services/supabase");
-const { authenticateUser } = require("../middleware/authMiddleware");
+const { uploadFile } = require("../services/upload.services");
+const { authenticateUser } = require("../middleware/auth.middleware");
 
 const handleFileUpload = async (req, res) => {
     try {
