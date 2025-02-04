@@ -34,7 +34,11 @@ const login = async(req, res) => {
     try {
         const { email, password } = req.body;
 
-        const { data, error } = await supabase.from("users").select("*").eq("email", email).single();
+        const { data, error } = await supabase
+                                        .from("users")
+                                        .select("*")
+                                        .eq("email", email)
+                                        .single();
 
         if(!data || error) {
             return res.status(401).json({ error: "Invalid credentials" });
@@ -47,6 +51,13 @@ const login = async(req, res) => {
 
         const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: JWT_EXPIRY });
 
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
         res.status(200).json({ message: "Login successful", token });
     } catch(err) {
         console.error("Login Error: ", err);
@@ -55,7 +66,21 @@ const login = async(req, res) => {
 };
 
 const verify = (req, res) => {
-    res.status(200).json({ message: "You are authenticated", user: req.user });
+    if (!req.user) {
+        return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    res.status(200).json({ user: req.user });
 };
 
-module.exports = { signup, login, verify };
+const logout = (req, res) => {
+    res.clearCookie("token", { httpOnly: true, secure: process.env.NODE_ENV === "production" });
+    res.status(200).json({ message: "Logged out" })
+}
+
+module.exports = { 
+    signup, 
+    login, 
+    verify, 
+    logout 
+};

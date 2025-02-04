@@ -1,11 +1,27 @@
+"use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/navigation";
+import { logout } from "@/api/api";
 
 interface HeaderComponentProps {
   setIsOpen: (value: boolean) => void;
 }
 
+
+
 const HeaderComponent: React.FC<HeaderComponentProps> = ({ setIsOpen }) => {
+  const router = useRouter();
+
+  const handleLogout = async() => {
+    try {
+      await logout();
+      router.replace("/");
+    } catch(error) {
+      alert('Logout failed');
+    }
+  } 
+
   return (
     <header className="bg-white border-none flex items-center justify-between px-6 py-4">
       <button
@@ -31,7 +47,7 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({ setIsOpen }) => {
             style={{ color: "#6B7280" }}
           />
         </div>
-        <p className="hidden sm:block text-gray-700">Profile</p>
+        <button className="hidden sm:block text-gray-700" onClick={() => handleLogout()}>Logout</button>
       </div>
     </header>
   );
