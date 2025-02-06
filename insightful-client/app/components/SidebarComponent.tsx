@@ -1,6 +1,8 @@
 import { faTimes, faHome, faComments, faHeadset, faSackDollar, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useAuth } from '@/context/AuthContext';
+import { fetchUploadedData } from '@/api/api';
 
 interface SidebarComponentProps {
     setIsOpen: (value: boolean) => void;
@@ -8,7 +10,29 @@ interface SidebarComponentProps {
     setShowUpload: (value: boolean) => void;
 }
 
+interface ChartData {
+    fileName: string;
+    created_at: string;
+  }
+
 const SidebarComponent: React.FC<SidebarComponentProps> = ({ setIsOpen, isOpen, setShowUpload }) => {
+  const { user } = useAuth();
+  const [uploadedFiles, setUploadedFiles] = useState<ChartData[]>([]);
+
+  useEffect(() => {
+      if(user) {
+        const loadUploads = async() => {
+          try {
+            const data = await fetchUploadedData();
+            setUploadedFiles(data.charts);
+          } catch (err) {
+            console.error(err);
+          }
+        };
+        loadUploads();
+      }
+    }, [user]);
+
   return (
     <aside
         className={`${
@@ -19,7 +43,6 @@ const SidebarComponent: React.FC<SidebarComponentProps> = ({ setIsOpen, isOpen, 
             <div className="h-12 w-12 bg-customBlue text-white flex items-center justify-center text-lg font-bold rounded-full">
                 LOGO
             </div>
-              {/* Close button for small screens */}
             <button
                 onClick={() => setIsOpen(false)}
                 className="w-5 h-5 items-center justify-center mt-3 md:hidden"
@@ -61,7 +84,19 @@ const SidebarComponent: React.FC<SidebarComponentProps> = ({ setIsOpen, isOpen, 
 
             <h2 className="text-gray-500 text-xs font-bold mt-10">Favorite Data Sources</h2>
             <ul className="space-y-2">
-                {/* TODO - Add previously imported data sources */}
+                {user ? (
+                uploadedFiles.length !== 0 ? (
+                    uploadedFiles.map((chart, index) => (
+                        <li key={index}>
+                            <h2 className="text-lg font-bold">{chart.fileName}</h2>
+                        </li>
+                    ))
+                ) : (
+                    <h1>No previously submitted charts.</h1>
+                )
+                ) : (
+                <h1>Login or Signup to view previously uploaded charts!</h1>
+                )}
             </ul>
         </nav>
         

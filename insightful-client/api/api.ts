@@ -36,14 +36,22 @@ export const uploadFile = async(file: File) => {
     }
 }
 
-export const fetchUploadedData = async() => {
+export const fetchUploadedData = async () => {
+    const token = Cookies.get("token");
+
     try {
-        const response = await fetch(`${backendUrl}/data`);
+        const response = await fetch(`${backendUrl}/data`, {
+            method: "GET",
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            credentials: "include",
+        });
+
         if (!response.ok) {
-        throw new Error("Failed to fetch uploaded data");
+            throw new Error("Failed to fetch uploaded data");
         }
+
         return await response.json();
-    } catch(err) {
+    } catch (err) {
         console.error("Failed to fetch data: ", err);
         throw err;
     }
