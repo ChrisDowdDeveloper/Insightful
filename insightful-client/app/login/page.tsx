@@ -26,11 +26,17 @@ const LoginPage = () => {
     return (
         <div className="flex h-screen flex-col md:flex-row">
             <div className="flex-1 bg-white flex flex-col items-center justify-center py-8">
-                <h1 className="font-bold text-customBlue text-3xl">Insightful</h1>
-                <p className="text-gray-500 text-sm mt-2">
-                    Welcome back! Please login to your account.
-                </p>
-
+                <div className="text-center space-y-6">
+                    <h1 className="font-bold text-customBlue text-3xl">Insightful</h1>
+                    <div>
+                        <h2 className="text-customBlue text-xl font-semibold">
+                            Transform Your Data into Actionable Insights
+                        </h2>
+                        <p className="text-gray-500 text-sm mt-2">
+                            Welcome back! Please login to your account.
+                        </p>
+                    </div>
+                </div>
                 <div className="mt-8 w-full max-w-sm">
                     <form className="flex flex-col space-y-4" onSubmit={handleLogin}>
                         <input
@@ -58,6 +64,20 @@ const LoginPage = () => {
                         </button>
                     </form>
                 </div>
+            </div>
+
+            <div className="flex-1 relative md:block hidden">
+                <video
+                    className="absolute top-0 left-0 w-full h-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                >
+                    <source src="/chart.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-40"></div>
             </div>
         </div>
     );

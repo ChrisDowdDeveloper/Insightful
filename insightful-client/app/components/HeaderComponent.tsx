@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import { logout } from "@/api/api";
+import { useAuth } from "@/context/AuthContext";
 
 interface HeaderComponentProps {
   setIsOpen: (value: boolean) => void;
@@ -12,6 +13,7 @@ interface HeaderComponentProps {
 
 const HeaderComponent: React.FC<HeaderComponentProps> = ({ setIsOpen }) => {
   const router = useRouter();
+  const { user } = useAuth();
 
   const handleLogout = async() => {
     try {
@@ -20,7 +22,11 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({ setIsOpen }) => {
     } catch(error) {
       alert('Logout failed');
     }
-  } 
+  }
+
+  const handleLogin = async() => {
+    router.push("/login");
+  }
 
   return (
     <header className="bg-white border-none flex items-center justify-between px-6 py-4">
@@ -47,7 +53,11 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({ setIsOpen }) => {
             style={{ color: "#6B7280" }}
           />
         </div>
-        <button className="hidden sm:block text-gray-700" onClick={() => handleLogout()}>Logout</button>
+        {user ? (
+          <button className="hidden sm:block text-gray-700" onClick={handleLogout}>Logout</button>
+        ): (
+          <button className="hidden sm:block text-gray-700" onClick={handleLogin}>Login</button>
+        )}
       </div>
     </header>
   );
