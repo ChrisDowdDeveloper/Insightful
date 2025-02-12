@@ -1,3 +1,4 @@
+import { uploadFile } from "@/api/api";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -20,7 +21,9 @@ const UploadFileComponent: React.FC<UploadFileComponentProps> = ({
     formData.append("file", files[0]);
 
     try {
-        //TODO - Add API call here to upload formData
+        const result = await uploadFile(files[0]);
+        alert("File uploaded successfully!");
+        console.log("Uploaded file: ", result)
     } catch(err) {
         console.error(err);
         alert("Failed to upload file. Please try again.")

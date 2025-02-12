@@ -38,7 +38,6 @@ export const uploadFile = async(file: File) => {
 
 export const fetchUploadedData = async () => {
     const token = Cookies.get("token");
-
     try {
         const response = await fetch(`${backendUrl}/data`, {
             method: "GET",
@@ -50,12 +49,16 @@ export const fetchUploadedData = async () => {
             throw new Error("Failed to fetch uploaded data");
         }
 
-        return await response.json();
+        const result = await response.json();
+        return {
+            charts: result.charts || [],
+        };
     } catch (err) {
-        console.error("Failed to fetch data: ", err);
+        console.error("Failed to fetch data:", err);
         throw err;
     }
 };
+
 
 export const login = async (email: string, password: string) => {
     try {

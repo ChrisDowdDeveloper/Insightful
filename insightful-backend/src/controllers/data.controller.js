@@ -8,13 +8,19 @@ const getUserCharts = async(req, res) => {
 
         const userEmail = req.user.email;
 
-        const { data, error } = await supabase.from("charts").select("*").eq("user_email", userEmail);
+        const { data, error } = await supabase.storage.from("uploads").list(userEmail);
 
         if(error) {
             throw error;
         }
 
-        res.status(200).json({ charts: data });
+        const files = data.map((file) => ({
+            fileName: file.name,
+            created_at: file.created_at,
+            url: `${process.env.SUPABASE_URL}/storage/v1/object/public/uploads/${req.user.email}/${file.name}`
+        }));
+
+        res.status(200).json({ charts: files });
     } catch (err) {
         console.error("Error fetching user charts: ", err);
         res.status(500).json({ error: "Failed to fetch charts" });
