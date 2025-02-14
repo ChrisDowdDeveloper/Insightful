@@ -10,6 +10,7 @@ interface CustomJwtPayload extends JwtPayload {
 export const uploadFile = async(file: File) => {
     let member = false;
     const token = Cookies.get("token");
+    console.log(token)
 
     if (token) {
         member = true;
@@ -22,7 +23,7 @@ export const uploadFile = async(file: File) => {
         const response = await fetch(`${backendUrl}/upload?member=${member}`, {
         method: "POST",
         body: formData,
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        credentials: "include"
         });
 
         if (!response.ok) {

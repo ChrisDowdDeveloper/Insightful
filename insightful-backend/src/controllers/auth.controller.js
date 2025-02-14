@@ -30,37 +30,37 @@ const signup = async (req, res) => {
     }
 };
 
-const login = async(req, res) => {
+const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
         const { data, error } = await supabase
-                                        .from("users")
-                                        .select("*")
-                                        .eq("email", email)
-                                        .single();
+            .from("users")
+            .select("*")
+            .eq("email", email)
+            .single();
 
-        if(!data || error) {
+        if (!data || error) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
         const isMatch = await bcrypt.compare(password, data.password);
-        if(!isMatch) {
+        if (!isMatch) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
-        const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: JWT_EXPIRY });
+        const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "7d" });
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
+            secure: process.env.NODE_ENV === "production" ? true : false,
             sameSite: "strict",
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
-        res.status(200).json({ message: "Login successful", token });
-    } catch(err) {
-        console.error("Login Error: ", err);
+        res.status(200).json({ message: "Login successful" });
+    } catch (err) {
+        console.error("Login Error:", err);
         res.status(500).json({ error: "Login failed" });
     }
 };
