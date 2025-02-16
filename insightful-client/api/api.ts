@@ -7,9 +7,11 @@ interface CustomJwtPayload extends JwtPayload {
     nameid?: string;
 }
 
+console.log(Cookies.get('token'))
+
 export const uploadFile = async(file: File) => {
     let member = false;
-    const token = Cookies.get("token");
+    const token = Cookies.get('token');
     console.log(token)
 
     if (token) {
