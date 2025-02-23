@@ -9,12 +9,25 @@ const uploadFile = async (filename, fileBuffer, contentType) => {
             throw new Error("Bucket 'uploads' does not exist. Create it in Supabase Storage.");
         }
 
-        const { data, error } = await supabase.storage.from("uploads").upload(filename, fileBuffer, { contentType });
+        console.log(`Uploading file: ${filename}...`);
 
-        if (error) throw error;
+        const { data, error } = await supabase.storage
+            .from("uploads")
+            .upload(filename, fileBuffer, {
+                contentType,
+                upsert: true,
+            });
+
+        if (error) {
+            console.error("Supabase Upload Error:", error);
+            throw new Error(`Supabase Upload Failed: ${error.message}`);
+        }
+
+        console.log("File uploaded successfully:", data);
         return data;
     } catch (err) {
-        throw new Error("Error uploading file: " + err.message);
+        console.error("Error uploading file:", err);
+        throw err;
     }
 };
 

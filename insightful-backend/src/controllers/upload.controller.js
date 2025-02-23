@@ -6,9 +6,11 @@ const handleFileUpload = async (req, res) => {
         const { file } = req;
         if (!file) return res.status(400).json({ error: "No file uploaded" });
 
+        console.log("Received file:", file.originalname, "Size:", file.size, "Type:", file.mimetype);
+
         const { member } = req.query;
         const fileName = `${Date.now()}-${file.originalname}`;
-        const fileBuffer = file.buffer;
+        const fileBuffer = Buffer.from(file.buffer);
         const contentType = file.mimetype;
 
         let uploadResult = null;
